@@ -10,12 +10,27 @@
 
 <body>
     <div id="app">
-        <click-counter></click-counter>
+        <div class="content">
+            <h1 class="title">Coffee Plans</h1>
+      
+            <h2 class="subtitle">
+              We travel the world to source the very best single origin coffee for you
+            </h2>
+            <div class="plans">
+                <plan v-for="plan in plans" :name="plan"></plan>
+            </div>
+        </div>
     </div>
 
     <script src="https://unpkg.com/vue@3"></script>
-    <script type="text/x-template" id="click-counter-template">
-        <button @click="count++">{{ count }}</button>
+    <script type="text-x-template" id="plan-template">
+        <div class="plan">
+            <div class="description">
+                <span class="title">
+                    {{ name }}
+                </span>
+            </div>
+        </div>
     </script>
     <script src="app.js"></script>
 </body>
