@@ -1,70 +1,63 @@
 <html>
 <head>
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
 </head>
 <body>
-  <div id="app"
-       class="ui container">
-    <h1>GitHub Profiles</h1>
-    <github-user-card 
-        v-for="username in usernames"
-        :username="username"
-    ></github-user-card>
+  <div id="app" class="ui container">
+    <h1>Notification Center</h1>
     
+    <!-- Notification Message Markup -->
+    <notification-message type="error" header="Oh no!">
+      <p>Your flight has been <b>cancelled!</b></p>
+    </notification-message>
+
+    <notification-message type="success" header="Oh yeah!">
+      <p>Your flight is on time</p>
+    </notification-message>
+
+    <notification-message type="warn" header="Oh yeah!">
+      <p>I'm just not sure</p>
+    </notification-message>
+
+    <notification-message>
+      <p></p>
+    </notification-message>
+
   </div>
-
-  <script type="text/x-template" id="github-user-card-template">
-    <div class="ui card">
-        <div class="image">
-          <img :src="user.avatar_url">
-        </div>
-        <div class="content">
-          <a :href="`https://github.com/${username}`" class="header">{{ user.name }}</a>
-          <div class="meta">
-            <span class="date">Joined in {{ user.created_at }}</span>
-          </div>
-          <div class="description">
-            {{ user.bio }}
-          </div>
-        </div>
-        <div class="extra content">
-          <a :href="`https://github.com/${username}?tab=followers`">
-            <i class="user icon"></i>
-            {{ user.followers}} friends
-          </a>
-        </div>
+  <!-- Template for Notification Message -->
+  <script type="text/x-template" id="notification-message-template">
+    <div class="ui message" :class="type" v-if=!hidden>
+      <i class="close icon" @click="hide"></i>
+      <div class="header">
+        {{ header }}
       </div>
-</script>
+      <slot></slot>
+    </div>
+  </script>
 
-  <!-- Import Vue.js and axios -->
+  <!-- Import Vue.js -->
   <script src="https://unpkg.com/vue@3"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <!-- Your JavaScript Code :) -->
   <script>
-    Vue.createApp({
-        data() {
-            return {
-                usernames: ['lharby', 'lukeharbyakqa', 'lukeharby', 'danielkellyio']
-            }
+    Vue.createApp({})
+    .component('notification-message', {
+      template: '#notification-message-template',
+      props: {
+        type: { type: String, default: 'info' },
+        header: { type: String, default: 'Message' },
+      },
+      data() {
+        return {
+          hidden: false
         }
-    })
-    .component('github-user-card', {
-        template: '#github-user-card-template',
-        props: {
-            username: { type: String, required: true }
-        },
-        data() {
-            return {
-                user: {}
-            }
-        },
-        async created() {
-            const response = await axios.get(`https://api.github.com/users/${this.username}`)
-            this.user = response.data
+      },
+      methods: {
+        hide() {
+          this.hidden = true
         }
+      }
     })
     .mount('#app')
   </script>
 </body>
-</html>
+</html> 
